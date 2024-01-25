@@ -19,11 +19,10 @@ host = os.getenv('POSTGRES_HOST')
 port = os.getenv('PORT_SQL')
 
 #READ CSV
-df= pd.read_csv('../data/df_countries_avg.csv')
+df = pd.read_csv('../dash_climate/data/df_countries.csv')
+df_countries_avg = df[df['country'].isin(['Argentina', 'Colombia', 'Germany', 'Spain'])]
 
 #FILTER data
-df_countries_avg=  df[df['country'].isin(['Argentina','Colombia','Germany','Spain'])]
-
 df_countries_avg= df_countries_avg.groupby(['city','country','month', 'month_num',]).agg({
     'maxtemp_c': 'max',
     'mintemp_c': 'min',
@@ -46,42 +45,39 @@ d_table_countries = dash_table.DataTable(df_countries_avg.to_dict('records'),
                                          'marginLeft': 'auto', 'marginRight': 'auto',
                                      'marginTop': 0, 'marginBottom': 25}) #General syntax for a table
 
+color_palette={
+                       'Argentina': '#008B8B',    # Set your desired color for Argentina
+                       'Colombia': '#8B008B',    # Set your desired color for Colombia
+                       'Germany': '#00CED1',    # Set your desired color for Germany
+                       'Spain': '#E9967A'          # Set your desired color for Spain
+             }
 
 # Graph 1
-fig = px.bar(df_countries_avg, 
+fig_1 = px.bar(df_countries_avg, 
              x='month', 
-             y='avgtemp_c',  
+             y='maxtemp_c',  
              color='country',
+             color_discrete_map=color_palette,
              barmode='group',
-             height=300, title = "The climate through 2023",
+             height=300, title = "Max temperature per month in 2023",
              range_y=[0,35],
-             color_discrete_map={
-                       'Argentina': 'darkcyan',    # Set your desired color for Argentina
-                       'Colombia': 'darkmagenta',    # Set your desired color for Colombia
-                       'Germany': 'darkturquoise',    # Set your desired color for Germany
-                       'Spain': 'darksalmon'          # Set your desired color for Spain
-             })
+            
+            )
 
-fig = fig.update_layout(
+fig_1 = fig_1.update_layout(
         plot_bgcolor="whitesmoke", paper_bgcolor="white", font_color="black"
     )
-fig.show()
-graph = dcc.Graph(figure=fig)
+graph = dcc.Graph(figure=fig_1)
 
 #Line graph
-fig_2 = px.line(df_countries_avg, x='month', y='avgtemp_c', height=300, title="Avg temperature in 2023", 
+fig_2 = px.line(df_countries_avg, x='month', y='mintemp_c', height=300, title="Min temperature per month in 2023", 
                     markers=True,
                     color= 'country',
-                    color_discrete_map={
-                        'Argentina': 'darkcyan',
-                        'Colombia': 'darkmagenta',
-                        'Germany': 'darkturquoise',
-                        'Spain': 'darksalmon'
-                    })
+                    color_discrete_map= color_palette)
 fig_2 = fig_2.update_layout(
         plot_bgcolor="whitesmoke", paper_bgcolor="white", font_color="black"
     )
-fig_2.show()
+
 graph_2 = dcc.Graph(figure=fig_2)
 
 
@@ -96,56 +92,79 @@ fig3 = px.choropleth(df_countries_avg, locations='country',
 fig3 = fig3.update_layout(
         plot_bgcolor="lightgray", paper_bgcolor="white", font_color="black", geo_bgcolor="white"
     )
+
 graph_3 = dcc.Graph(figure=fig3)
-
-
-## Add DROPDOWN
-app =dash.Dash(external_stylesheets=[dbc.themes.JOURNAL])
-server = app.server
 
 #since we are using multi parameter, this time we need a list of the all unique values 
 #in the "country" column to use in the function of the callback
-countries =df_countries_avg['country'].unique().tolist() 
+countries = df_countries_avg['country'].unique().tolist()
 
-#changing the color of the dropdown value
-dropdown = dcc.Dropdown(['Argentina', 'Colombia', 'Germany','Spain'],value=['Argentina', 'Colombia', 'Germany','Spain'],
-                        clearable=False)
+# Define the Dash app
+app = dash.Dash(external_stylesheets=[dbc.themes.JOURNAL])
+server = app.server
 
-#dcc.Dropdown([{'label': ['Germany', 'Belgium', 'Denmark'], 'value': "Germany"},]) 
+dropdown = dcc.Dropdown(
+            id='country-dropdown',
+            options=[{'label': country, 'value': country} for country in df_countries_avg['country'].unique()],
+            value=['Argentina', 'Colombia', 'Germany', 'Spain'],
+            clearable=True,
+            multi=True  # Allow selecting multiple countries
+        )
 
 
-
-#we also moved the dropdown menu a bit to the left side
-
-app.layout = html.Div([html.H1('My First Spicy Dash', style={'textAlign': 'center', 'color': 'Turquoise'}), 
-                       html.Div(html.P("Argentina, Colombia, Germany & Spain"), 
-                                style={'marginLeft': 50, 'marginRight': 25}),
-                       html.Div([html.Div('Weather data per month', 
-                                          style={'backgroundColor': 'cornflowerblue', 'color': 'white', 
-                                                 'width': '900px', 'marginLeft': 'auto', 'marginRight': 'auto'}),
-                                 d_table_countries, dropdown, graph,  graph_2, graph_3])
-                      ])
+# Define the layout of the app
+app.layout = html.Div([
+    html.H1('My Climate Dash', style={'textAlign': 'center', 'color': 'Turquoise'}),
+    html.Div(html.P("Argentina, Colombia, Germany & Spain"), 
+             style={'textAlign': 'center','marginLeft': 50, 'marginRight': 25}),
+    html.Div([graph_3,
+        html.Div('Weather data per month', 
+                 style={'backgroundColor': 'cornflowerblue', 'color': 'white', 
+                        'width': '900px', 'marginLeft': 'auto', 'marginRight': 'auto'}),
+        d_table_countries, 
+        dropdown,
+        dcc.Graph(id='graph'),  # Placeholder for the graph
+        dcc.Graph(id='graph_2')
+    ])
+])
+# Define callback to update the table and graphs based on dropdown selection
 @callback(
-    Output(graph, "figure"), 
-    Input(dropdown, "value"))
+    [Output('graph', 'figure'),
+    Output('graph_2', 'figure')], 
+    [Input(dropdown, 'value')]
+)
+def update_graphs(selected_countries): 
+    if not selected_countries:
+        return [{},{}]  # Return empty figure if no country is selected
+    
+    mask = df_countries_avg['country'].isin(selected_countries)  # Filter data based on selected countries
+    filtered_data = df_countries_avg[mask]
+    
+    fig_1 = px.bar(filtered_data, 
+                 x='month', 
+                 y='maxtemp_c',  
+                 color='country',
+                 color_discrete_map=color_palette,
+                 barmode='group',
+                 height=300, 
+                 title='Max temperature per month in 2023')
+    
+    fig_2 = px.line(filtered_data, 
+                   x='month', 
+                   y='mintemp_c',  
+                   color='country',
+                   color_discrete_map=color_palette,
+                   height=300, 
+                   title='Min temperature per month in 2023')
+    
+    for fig in [fig_1,fig_2]:
+        fig.update_layout(
+            plot_bgcolor="whitesmoke", 
+            paper_bgcolor="white", 
+            font_color="black")
 
-#Output(component_id='my-output', component_property='children'),
-#Input(component_id='my-input', component_property='value')
+    return fig_1,fig_2
 
-def update_bar_chart(country): 
-    mask = df_countries_avg["country"] == country # coming from the function parameter
-    fig =px.bar(df_countries_avg[mask], 
-             x='month', 
-             y='avgtemp_c',  
-             color='country',
-             barmode='group',
-             height=300, title = "We can take a look at the weather in 2023",)
-    fig = fig.update_layout(
-        plot_bgcolor="whitesmoke", paper_bgcolor="white", font_color="black",
-    )
-
-    return fig # whatever you are returning here is connected to the component property of
-                       #the output which is figure
-
-if __name__ == "__main__":
+# Run the app
+if __name__ == '__main__':
     app.run_server(mode="inline", host="localhost")
