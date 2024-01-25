@@ -1,5 +1,5 @@
 dash==2.14.2
-gunicorn
+gunicorn==21.2.0
 plotly==5.9.0
 #dash-tools
 pandas==2.0.3
