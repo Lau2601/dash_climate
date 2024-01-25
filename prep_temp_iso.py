@@ -19,7 +19,7 @@ host = os.getenv('POSTGRES_HOST')
 port = os.getenv('PORT_SQL')
 
 #READ CSV
-df= pd.read_csv('../07_reendering/data/df_countries_avg.csv')
+df= pd.read_csv('../data/df_countries_avg.csv')
 
 #FILTER data
 df_countries_avg=  df[df['country'].isin(['Argentina','Colombia','Germany','Spain'])]

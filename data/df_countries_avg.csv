@@ -1,0 +1,45 @@
+,city,country,month,month_num,maxtemp_c,mintemp_c,avgtemp_c
+25,Buenos Aires,Argentina,February ,2,42.0,9.7,26.01
+28,Buenos Aires,Argentina,March    ,3,43.9,14.0,26.68
+22,Buenos Aires,Argentina,April    ,4,29.8,8.4,18.78
+29,Buenos Aires,Argentina,May      ,5,25.6,6.0,15.69
+27,Buenos Aires,Argentina,June     ,6,24.7,2.6,12.5
+26,Buenos Aires,Argentina,July     ,7,25.2,0.4,11.97
+23,Buenos Aires,Argentina,August   ,8,28.0,4.0,13.05
+32,Buenos Aires,Argentina,September,9,24.4,5.2,13.8
+31,Buenos Aires,Argentina,October  ,10,30.2,5.7,17.45
+30,Buenos Aires,Argentina,November ,11,34.3,8.4,19.96
+24,Buenos Aires,Argentina,December ,12,35.3,12.1,22.38
+14,Bogota,Colombia,February ,2,21.3,6.7,14.06
+17,Bogota,Colombia,March    ,3,21.0,8.1,14.08
+11,Bogota,Colombia,April    ,4,20.5,9.6,14.06
+18,Bogota,Colombia,May      ,5,22.5,8.8,14.3
+16,Bogota,Colombia,June     ,6,21.2,8.8,13.89
+15,Bogota,Colombia,July     ,7,20.1,8.6,13.93
+12,Bogota,Colombia,August   ,8,21.2,6.6,14.17
+21,Bogota,Colombia,September,9,23.3,7.1,13.89
+20,Bogota,Colombia,October  ,10,22.4,7.4,13.25
+19,Bogota,Colombia,November ,11,22.2,6.8,12.98
+13,Bogota,Colombia,December ,12,21.7,4.8,14.02
+3,Berlin,Germany,February ,2,12.1,-4.0,3.91
+6,Berlin,Germany,March    ,3,17.3,-1.7,6.15
+0,Berlin,Germany,April    ,4,20.0,-2.4,7.91
+7,Berlin,Germany,May      ,5,26.6,4.2,13.8
+5,Berlin,Germany,June     ,6,31.0,7.5,19.6
+4,Berlin,Germany,July     ,7,35.2,12.0,20.5
+1,Berlin,Germany,August   ,8,31.7,11.7,20.28
+10,Berlin,Germany,September,9,31.4,10.7,20.21
+9,Berlin,Germany,October  ,10,27.0,4.8,12.65
+8,Berlin,Germany,November ,11,14.9,-4.9,6.13
+2,Berlin,Germany,December ,12,11.5,-6.3,3.9
+36,Madrid,Spain,February ,2,18.7,-1.0,7.02
+39,Madrid,Spain,March    ,3,25.6,-1.5,12.48
+33,Madrid,Spain,April    ,4,30.5,4.5,17.28
+40,Madrid,Spain,May      ,5,31.5,7.9,17.86
+38,Madrid,Spain,June     ,6,38.8,13.1,23.56
+37,Madrid,Spain,July     ,7,40.4,19.0,28.55
+34,Madrid,Spain,August   ,8,41.6,15.6,28.35
+43,Madrid,Spain,September,9,31.7,13.0,22.37
+42,Madrid,Spain,October  ,10,31.2,8.9,18.62
+41,Madrid,Spain,November ,11,19.7,5.3,11.92
+35,Madrid,Spain,December ,12,13.7,4.0,7.8
