@@ -19,7 +19,7 @@ host = os.getenv('POSTGRES_HOST')
 port = os.getenv('PORT_SQL')
 
 #READ CSV
-df = pd.read_csv('../data/df_countries.csv')
+df = pd.read_csv("./df_countries.csv")
 df_countries_avg = df[df['country'].isin(['Argentina', 'Colombia', 'Germany', 'Spain'])]
 
 #FILTER data
@@ -167,4 +167,4 @@ def update_graphs(selected_countries):
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(mode="inline", host="localhost")
+    app.run_server()#mode="inline", host="localhost")
