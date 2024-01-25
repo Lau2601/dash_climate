@@ -18,8 +18,19 @@ password = os.getenv('POSTGRES_PW')
 host = os.getenv('POSTGRES_HOST')
 port = os.getenv('PORT_SQL')
 
-df= pd.read_csv('../data/df_countries_avg.csv')
+#READ CSV
+df= pd.read_csv('../07_reendering/data/df_countries_avg.csv')
 
+#FILTER data
+df_countries_avg=  df[df['country'].isin(['Argentina','Colombia','Germany','Spain'])]
+
+df_countries_avg= df_countries_avg.groupby(['city','country','month', 'month_num',]).agg({
+    'maxtemp_c': 'max',
+    'mintemp_c': 'min',
+    'avgtemp_c': 'mean'
+}).reset_index()
+df_countries_avg['avgtemp_c']=df_countries_avg['avgtemp_c'].round(2)
+df_countries_avg.sort_values(['country','month_num'], inplace=True)
 
 # Table
 columns_to_exclude=['month_num','country']
