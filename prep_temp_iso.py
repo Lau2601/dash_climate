@@ -19,7 +19,7 @@ host = os.getenv('POSTGRES_HOST')
 port = os.getenv('PORT_SQL')
 
 #READ CSV
-df = pd.read_csv('../dash_climate/data/df_countries.csv')
+df = pd.read_csv('../Users/lauraacevedo/Documents/SPICED ACADEMY/Github/dash_climate/data/df_countries.csv')
 df_countries_avg = df[df['country'].isin(['Argentina', 'Colombia', 'Germany', 'Spain'])]
 
 #FILTER data
