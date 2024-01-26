@@ -90,7 +90,8 @@ fig_3 = px.choropleth(df_countries_avg, locations='country',
                     color_continuous_scale=px.colors.sequential.thermal)
 
 fig_3 = fig_3.update_layout(
-        plot_bgcolor="lightgray", paper_bgcolor="white", font_color="black", geo_bgcolor="white"
+        plot_bgcolor="lightgray", paper_bgcolor="white", font_color="black", geo_bgcolor="white",
+        width= 1000, height=600
     )
 
 graph_3 = dcc.Graph(figure=fig_3)
