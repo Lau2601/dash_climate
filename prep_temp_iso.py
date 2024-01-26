@@ -19,7 +19,7 @@ host = os.getenv('POSTGRES_HOST')
 port = os.getenv('PORT_SQL')
 
 #READ CSV
-df = pd.read_csv("./df_countries.csv")
+df = pd.read_csv("./df_countries_app.csv")
 df_countries_avg = df[df['country'].isin(['Argentina', 'Colombia', 'Germany', 'Spain'])]
 
 #FILTER data
@@ -82,18 +82,18 @@ graph_2 = dcc.Graph(figure=fig_2)
 
 
 # Animated map
-fig3 = px.choropleth(df_countries_avg, locations='country', 
+fig_3 = px.choropleth(df_countries_avg, locations='country', 
                     projection='natural earth', 
                     animation_frame="month",
                     color='avgtemp_c', 
                     locationmode='country names', 
                     color_continuous_scale=px.colors.sequential.thermal)
 
-fig3 = fig3.update_layout(
+fig_3 = fig_3.update_layout(
         plot_bgcolor="lightgray", paper_bgcolor="white", font_color="black", geo_bgcolor="white"
     )
 
-graph_3 = dcc.Graph(figure=fig3)
+graph_3 = dcc.Graph(figure=fig_3)
 
 #since we are using multi parameter, this time we need a list of the all unique values 
 #in the "country" column to use in the function of the callback
@@ -114,19 +114,26 @@ dropdown = dcc.Dropdown(
 
 # Define the layout of the app
 app.layout = html.Div([
-    html.H1('My Climate Dash', style={'textAlign': 'center', 'color': 'Turquoise'}),
+    html.H1('My Climate Dash', style={'textAlign': 'center', 'color': 'Turquoise', 'marginRight': 25, 
+                                      'marginTop': 50, 'marginBottom': 25}),
     html.Div(html.P("Argentina, Colombia, Germany & Spain"), 
-             style={'textAlign': 'center','marginLeft': 50, 'marginRight': 25}),
-    html.Div([graph_3,
-        html.Div('Weather data per month', 
-                 style={'backgroundColor': 'cornflowerblue', 'color': 'white', 
-                        'width': '900px', 'marginLeft': 'auto', 'marginRight': 'auto'}),
-        d_table_countries, 
-        dropdown,
-        dcc.Graph(id='graph'),  # Placeholder for the graph
-        dcc.Graph(id='graph_2')
+             style={'textAlign': 'center', 'font-size': '26px', 'marginLeft': 50, 'marginRight': 25,
+                    'marginTop': 0, 'marginBottom': 15}),
+    html.Div([
+        html.Div([graph_3], style={'display': 'flex', 'justify-content': 'center'}),
+        html.Div([
+            html.Div('Weather data per month', 
+                     style={'backgroundColor': 'cornflowerblue', 'color': 'white', 'font-weight': 'bold', 
+                            'width': '900px', 'marginLeft': 'auto', 'marginRight': 'auto',
+                            'marginTop': 100, 'marginBottom': 0}),
+            d_table_countries, 
+            dropdown,
+            html.Div(dcc.Graph(id='graph'), style={'display': 'flex', 'justify-content': 'center'}),
+            html.Div(dcc.Graph(id='graph_2'), style={'display': 'flex', 'justify-content': 'center'})
+        ], style={'marginLeft': 100, 'marginRight': 100})
     ])
 ])
+        
 # Define callback to update the table and graphs based on dropdown selection
 @callback(
     [Output('graph', 'figure'),
@@ -158,13 +165,11 @@ def update_graphs(selected_countries):
                    title='Min temperature per month in 2023')
     
     for fig in [fig_1,fig_2]:
-        fig.update_layout(
-            plot_bgcolor="whitesmoke", 
-            paper_bgcolor="white", 
-            font_color="black")
+        fig.update_layout(plot_bgcolor="whitesmoke", paper_bgcolor="white", font_color="black",
+                          width= 900,height= 400)
 
     return fig_1,fig_2
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server()#mode="inline", host="localhost")
+    app.run_server(mode="inline", host="localhost")
